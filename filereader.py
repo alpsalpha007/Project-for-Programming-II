@@ -1,76 +1,126 @@
-# Define a basic class to read files using a generator
-class FileReader:
-    def init(self, filename):
-        # Initialize the object with a filename
-        self._filename = filename
-
-    @property
-    def filename(self):
-        # Getter method for filename
-        return self._filename
-
-    @filename.setter
-    def filename(self, value):
-        # Setter method for filename
-        self._filename = value
-
-    def read_lines(self):
-        # Generator function that yields one line at a time from the file
-        with open(self._filename, 'r') as f:
-            for line in f:
-                yield line.strip()  # Remove newline and spaces
-
-    @staticmethod
-    def static_info():
-        # A static method that doesn't depend on instance or class
-        return "Static method: FileReader reads files."
-
-    @classmethod
-    def class_info(cls):
-        # A class method that gets the class as the first argument
-        return f"Class method: {cls.name} is ready!"
-
-    def add(self, other):
-        # Special method to use + operator to combine two FileReader objects
-        new_file = "concatenated_output.txt"
-        with open(new_file, 'w') as out:
-            with open(self._filename, 'r') as f1, open(other.filename, 'r') as f2:
-                out.write(f1.read())  # Write content of first file
-                out.write("\n")       # Add a newline between files
-                out.write(f2.read())  # Write content of second file
-        return FileReader(new_file)  # Return new FileReader instance
-
-# Define a subclass with additional functionality
-class AdvancedFileReader(FileReader):
-    def line_count(self):
-        # Count number of lines using the generator
-        return sum(1 for _ in self.read_lines())
-
-    def word_count(self):
-        # Count total words in the file
-        return sum(len(line.split()) for line in self.read_lines())
-
-# Decorator that changes the text color using ANSI escape codes
 def color_decorator(color):
-    # Dictionary of ANSI color codes
-    color_codes = {
-        'red': '\033[91m',
-        'green': '\033[92m',
-        'yellow': '\033[93m',
-        'reset': '\033[0m'
+    codes = {
+        "red": "\033[91m",
+        "green": "\033[92m",
+        "yellow": "\033[93m",
+        "reset": "\033[0m",
     }
 
     def decorator(func):
-        # Inner decorator function
         def wrapper(*args, **kwargs):
-            result = func(*args, **kwargs)  # Call the original function
-            return f"{color_codes.get(color, '')}{result}{color_codes['reset']}"
+            result = func(*args, **kwargs)
+            return f"{codes.get(color, '')}{result}{codes['reset']}"
+
         return wrapper
 
     return decorator
 
-# Example usage of the decorator
-@color_decorator('red')
-def greeting():
-    # Function that returns a string
-    return "Hello, colorful world!"
+
+class FileReader:
+    def __init__(self, filename):
+        self._filename = filename
+
+    @property
+    def filename(self):
+        return self._filename
+
+    @filename.setter
+    def filename(self, value):
+        self._filename = value
+
+    def read_lines(self):
+        with open(self._filename, "r") as f:
+            for line in f:
+                yield line.strip()
+
+    @staticmethod
+    def static_info():
+        return "Static method: FileReader reads files."
+
+    @classmethod
+    # @color_decorator('yellow')
+    def class_info(cls):
+        return f"Class method: {cls.__name__} is ready"
+
+    def __str__(self):
+        return f"FileReader(filename='{self._filename}')"
+
+    def __add__(self, other):
+        combined_file = "concatenated_output.txt"
+        with open(combined_file, "w") as out:
+            with open(self._filename, "r") as f1, open(other.filename, "r") as f2:
+                out.write(f1.read())
+                out.write("\n")
+                out.write(f2.read())
+        return FileReader(combined_file)
+
+    @color_decorator("green")
+    def display_info(self):
+        return f"Reading file: {self._filename}"
+
+
+class AdvancedFileReader(FileReader):
+    def __str__(self):
+        return f"AdvancedFileReader(filename='{self._filename}')"
+
+    def unique_wordcount(self):
+        words = []
+        count = 0
+        with open(self._filename, "r") as f:
+            for line in f:
+                for word in line.split():
+                    if word not in words:
+                        words.append(word)
+                        count += 1
+        return count
+
+    def longest_line(self):
+        with open(self._filename, "r") as f:
+            longest_line = max(f, key=len)
+        return longest_line.strip()
+
+    def concat_multiple_files(self, *others):
+        combined_file = "multi_concatenated_output.txt"
+        with open(combined_file, "w") as out:
+            with open(self._filename, "r") as f:
+                out.write(f.read())
+                out.write("\n")
+            for other in others:
+                with open(other.filename, "r") as f:
+                    out.write(f.read())
+                    out.write("\n")
+        return AdvancedFileReader(combined_file)
+
+    @color_decorator("red")
+    def get_stats(self):
+        return f"Lines: {self.longest_line()}, Words: {self.unique_wordcount()}"
+
+
+file_one = FileReader("text1.txt")
+file_two = FileReader("text2.txt")
+
+print(file_one.display_info())
+print(file_two.display_info())
+
+combined_files = file_one + file_two
+print(f"\nCombined file created: {combined_files.filename}\n")
+
+for line in combined_files.read_lines():
+    print(line)
+
+print("\n" + FileReader.static_info())
+print(FileReader.class_info())
+print("\n")
+adv_file1 = AdvancedFileReader("text1.txt")
+adv_file2 = AdvancedFileReader("text2.txt")
+adv_file3 = AdvancedFileReader("text3.txt")
+
+# combined_reader = AdvancedFileReader("multi_concatenated_output.txt")
+
+
+combined_adv_files = adv_file1.concat_multiple_files(adv_file2, adv_file3)
+for line in combined_adv_files.read_lines():
+    print(line)
+
+
+print(combined_adv_files.get_stats())
