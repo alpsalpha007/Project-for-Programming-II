@@ -32,7 +32,6 @@ def test_advanced_longest_line():
 def test_concat_multiple_files():
     mfr1 = MultiFileReader("text1.txt")
     combined = mfr1.concat_multiple_files(MultiFileReader("text2.txt"), MultiFileReader("text3.txt"))
-    #lines = list(combined.read_lines())
     assert combined.filename == "multi_concatenated_output.txt"
 
 
