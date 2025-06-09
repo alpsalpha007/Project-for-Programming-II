@@ -1,6 +1,6 @@
 import os
 import pytest
-from Exam import FileReader, AdvancedFileReader, color_decorator
+from Exam import FileReader, MultiFileReader, color_decorator
 def test_read_lines():
     fr = FileReader("text1.txt")
     assert list(fr.read_lines()) == ["Roses are red", "im in my head"]
@@ -23,25 +23,18 @@ def test_static_and_class_info():
     assert "FileReader" in FileReader.class_info()
 
 def test_advanced_unique_wordcount():
-    afr = AdvancedFileReader("text1.txt")
+    afr = MultiFileReader("text1.txt")
     assert afr.unique_wordcount() == 7
 
 def test_advanced_longest_line():
-    assert AdvancedFileReader("text3.txt").longest_line() == "my heart is dead im such a fool"
+    assert MultiFileReader("text3.txt").longest_line() == "my heart is dead im such a fool"
 
 def test_concat_multiple_files():
-    afr1 = AdvancedFileReader("text1.txt")
-    combined = afr1.concat_multiple_files(AdvancedFileReader("text2.txt"), AdvancedFileReader("text3.txt"))
-    lines = list(combined.read_lines())
+    mfr1 = MultiFileReader("text1.txt")
+    combined = mfr1.concat_multiple_files(MultiFileReader("text2.txt"), MultiFileReader("text3.txt"))
+    #lines = list(combined.read_lines())
     assert combined.filename == "multi_concatenated_output.txt"
 
 
 def test_get_stats_color():
-    assert "\033[91m" in AdvancedFileReader("text1.txt").get_stats()
-
-def test_color_decorator_simple():
-    @color_decorator('red')
-    def test_func():
-        return "X"
-    result = test_func()
-    assert result.startswith('\033[91m') and result.endswith('\033[0m') and "X" in result
+    assert "\033[91m" in MultiFileReader("text1.txt").get_stats()

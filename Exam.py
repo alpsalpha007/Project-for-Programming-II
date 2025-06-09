@@ -59,9 +59,9 @@ class FileReader:
         return f"Reading file: {self._filename}"
 
 
-class AdvancedFileReader(FileReader):
+class MultiFileReader(FileReader):
     def __str__(self):
-        return f"AdvancedFileReader(filename='{self._filename}')"
+        return f"MultiFileReader(filename='{self._filename}')"
 
     def unique_wordcount(self):
         words = []
@@ -89,7 +89,7 @@ class AdvancedFileReader(FileReader):
                 with open(other.filename, "r") as f:
                     out.write(f.read())
                     out.write("\n")
-        return AdvancedFileReader(combined_file)
+        return MultiFileReader(combined_file)
 
     @color_decorator("red")
     def get_stats(self):
@@ -111,16 +111,16 @@ for line in combined_files.read_lines():
 print("\n" + FileReader.static_info())
 print(FileReader.class_info())
 print("\n")
-adv_file1 = AdvancedFileReader("text1.txt")
-adv_file2 = AdvancedFileReader("text2.txt")
-adv_file3 = AdvancedFileReader("text3.txt")
+mfr_file1 = MultiFileReader("text1.txt")
+mfr_file2 = MultiFileReader("text2.txt")
+mfr_file3 = MultiFileReader("text3.txt")
 
 # combined_reader = AdvancedFileReader("multi_concatenated_output.txt")
 
 
-combined_adv_files = adv_file1.concat_multiple_files(adv_file2, adv_file3)
-for line in combined_adv_files.read_lines():
+combined_multi_files = mfr_file1.concat_multiple_files(mfr_file2, mfr_file3)
+for line in combined_multi_files.read_lines():
     print(line)
 
 
-print(combined_adv_files.get_stats())
+print(combined_multi_files.get_stats())
