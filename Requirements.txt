@@ -1,1 +1,2 @@
-This is what you will need to know for the project
+pytest
+black
