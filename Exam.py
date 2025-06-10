@@ -42,8 +42,8 @@ class FileReader:
     def read_lines(self):
         """Generator function that reads lines from the file."""
         with open(self._filename, "r") as f:
-            for line in f:
-                yield line.strip()
+            for line3 in f:
+                yield line3.strip()
 
     @staticmethod
     def static_info():
@@ -69,12 +69,12 @@ class FileReader:
                 out.write(f2.read())
         return FileReader(combined_file)
 
-    @color_decorator("green")
+    @color_decorator("red")
     def display_info(self):
         """Returns the file's name colored green."""
         return f"Reading file: {self._filename}"
 
-
+#blahblah
 class MultiFileReader(FileReader):
     """Subclass of FileReader with more functionality."""
 
@@ -87,8 +87,8 @@ class MultiFileReader(FileReader):
         words = []
         count = 0
         with open(self._filename, "r") as f:
-            for line in f:
-                for word in line.split():
+            for line2 in f:
+                for word in line2.split():
                     if word not in words:
                         words.append(word)
                         count += 1
@@ -128,8 +128,8 @@ print(file_two.display_info())
 combined_files = file_one + file_two
 print(f"\nCombined file created: {combined_files.filename}\n")
 
-for line in combined_files.read_lines():
-    print(line)
+for line1 in combined_files.read_lines():
+    print(line1)
 
 print("\n" + FileReader.static_info())
 print(FileReader.class_info())
