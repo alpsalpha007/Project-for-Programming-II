@@ -1,5 +1,5 @@
 def color_decorator(color): """function called color_decorator uses ANSI escape codes to"""
-    codes = { """this part has the colors, and the with the ANSI code"""
+    codes = { 
         "red": "\033[91m",
         "green": "\033[92m",
         "yellow": "\033[93m",
