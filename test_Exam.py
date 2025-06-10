@@ -6,7 +6,7 @@ def test_read_lines():
     assert list(fr.read_lines()) == ["Roses are red", "im in my head"]
 
 def test_display_info_color():
-    assert "\033[92m" in FileReader("test1.txt").display_info()
+    assert "\033[92m" in FileReader("text1.txt").display_info()
 
 def test_add_files():
     combined = FileReader("text1.txt") + FileReader("text2.txt")
